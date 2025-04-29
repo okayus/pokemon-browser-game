@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
+import { Api } from 'shared/src/api';
 
 // 型定義
 type Bindings = {
@@ -19,7 +20,7 @@ api.get('/health', (c) => {
   });
 });
 
-// サンプルエンドポイント - モンスターリスト取得
+// モンスターリスト取得 - Hono RPCに対応
 api.get('/monsters', async (c) => {
   try {
     // 実際にはDBから取得するが、今はモックデータを返す
@@ -31,8 +32,10 @@ api.get('/monsters', async (c) => {
     ];
 
     return c.json({
-      monsters,
-      count: monsters.length,
+      data: {
+        monsters,
+        count: monsters.length,
+      }
     });
   } catch (error) {
     console.error('Error fetching monsters:', error);
@@ -47,7 +50,7 @@ api.get('/monsters', async (c) => {
   }
 });
 
-// サンプルエンドポイント - モンスター詳細取得
+// モンスター詳細取得 - Hono RPCに対応
 api.get(
   '/monsters/:id',
   zValidator('param', z.object({ id: z.string() })),
@@ -95,7 +98,11 @@ api.get(
         );
       }
 
-      return c.json({ monster });
+      return c.json({ 
+        data: { 
+          monster 
+        } 
+      });
     } catch (error) {
       console.error(`Error fetching monster ${c.req.param('id')}:`, error);
       return c.json(
@@ -110,4 +117,116 @@ api.get(
   }
 );
 
-export default api;
+// ユーザープロフィール取得API
+api.get('/user/profile', async (c) => {
+  try {
+    // モックデータ
+    const profile = {
+      id: 'user123',
+      displayName: 'ポケモントレーナー',
+      avatarUrl: 'https://example.com/avatar.png',
+    };
+
+    return c.json({
+      data: { profile }
+    });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return c.json(
+      {
+        error: {
+          message: 'Failed to fetch user profile',
+        },
+      },
+      500
+    );
+  }
+});
+
+// ユーザープロフィール更新API
+api.put('/user/profile', async (c) => {
+  try {
+    const data = await c.req.json();
+    
+    // 実際にはDBに保存する処理
+    console.log('Updating user profile:', data);
+    
+    return c.json({
+      data: { 
+        success: true 
+      }
+    });
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return c.json(
+      {
+        error: {
+          message: 'Failed to update user profile',
+        },
+      },
+      500
+    );
+  }
+});
+
+// プレイヤーデータ取得API
+api.get('/gameplay/player-data', async (c) => {
+  try {
+    // モックデータ
+    const playerData = {
+      playerId: 'player123',
+      monsters: [
+        { id: 1, name: 'フレイムドラゴン', type: 'fire', level: 12 },
+        { id: 3, name: 'サンダーバード', type: 'electric', level: 8 },
+      ],
+      inventory: [
+        { id: 1, name: 'モンスターボール', type: 'ball', quantity: 5 },
+        { id: 2, name: '回復薬', type: 'potion', quantity: 3 },
+      ],
+    };
+
+    return c.json({
+      data: playerData
+    });
+  } catch (error) {
+    console.error('Error fetching player data:', error);
+    return c.json(
+      {
+        error: {
+          message: 'Failed to fetch player data',
+        },
+      },
+      500
+    );
+  }
+});
+
+// ゲーム進行状況保存API
+api.post('/gameplay/save', async (c) => {
+  try {
+    const data = await c.req.json();
+    
+    // 実際にはDBに保存する処理
+    console.log('Saving game progress:', data);
+    
+    return c.json({
+      data: { 
+        success: true,
+        savedAt: new Date().toISOString(),
+      }
+    });
+  } catch (error) {
+    console.error('Error saving game progress:', error);
+    return c.json(
+      {
+        error: {
+          message: 'Failed to save game progress',
+        },
+      },
+      500
+    );
+  }
+});
+
+// 型アサーションでHono RPCの型を付ける
+export default api as Hono<{ Bindings: Bindings }, Api>;
