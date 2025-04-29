@@ -15,17 +15,16 @@ host = "127.0.0.1"
 # [vars]
 # MY_VARIABLE = "production_value"
 
-[kv_namespaces]
-# 開発環境用のローカルKV名前空間
-[[kv_namespaces]]
-binding = "GAME_STORE"
-id = "dev-game-store"
-preview_id = "dev-game-store"
+# 開発環境では一時的にKVとD1の要件をコメントアウト
+# [[kv_namespaces]]
+# binding = "GAME_STORE"
+# id = "dev-game-store"
+# preview_id = "dev-game-store"
 
-[[d1_databases]]
-binding = "DB"
-database_name = "pokelike"
-database_id = "c63d6cf7-90af-440b-9b16-937eb34c0195"
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "pokelike"
+# database_id = "c63d6cf7-90af-440b-9b16-937eb34c0195"
 
 [triggers]
 crons = [ ]
