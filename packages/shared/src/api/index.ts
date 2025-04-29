@@ -1,1 +1,86 @@
-import { ApiResponse, Monster, MonsterSummary } from '..';\n\n/**\n * API型定義\n * Hono RPCで利用する型定義\n */\n\n// モンスター関連API\nexport type MonstersApi = {\n  // モンスター一覧取得\n  'GET /monsters': {\n    response: ApiResponse<{\n      monsters: MonsterSummary[];\n      count: number;\n    }>;\n  };\n  // モンスター詳細取得\n  'GET /monsters/:id': {\n    param: { id: string };\n    response: ApiResponse<{\n      monster: Monster;\n    }>;\n  };\n};\n\n// ユーザー関連API\nexport type UserApi = {\n  // ユーザープロフィール取得\n  'GET /user/profile': {\n    response: ApiResponse<{\n      profile: {\n        id: string;\n        displayName: string;\n        avatarUrl?: string;\n      };\n    }>;\n  };\n  // ユーザープロフィール更新\n  'PUT /user/profile': {\n    json: {\n      displayName?: string;\n      avatarUrl?: string;\n    };\n    response: ApiResponse<{\n      success: boolean;\n    }>;\n  };\n};\n\n// ゲームプレイ関連API\nexport type GameplayApi = {\n  // プレイヤーデータ取得\n  'GET /gameplay/player-data': {\n    response: ApiResponse<{\n      playerId: string;\n      monsters: {\n        id: number;\n        name: string;\n        type: string;\n        level: number;\n      }[];\n      inventory: {\n        id: number;\n        name: string;\n        type: string;\n        quantity: number;\n      }[];\n    }>;\n  };\n  // ゲーム進行状況保存\n  'POST /gameplay/save': {\n    json: {\n      position: { x: number; y: number; mapId: number };\n      monsters: { id: number; experience: number; hp: number }[];\n      inventory: { id: number; quantity: number }[];\n    };\n    response: ApiResponse<{\n      success: boolean;\n      savedAt: string;\n    }>;\n  };\n};\n\n// 合成型としてAPIを定義\nexport type Api = MonstersApi & UserApi & GameplayApi;\n
+import { ApiResponse, Monster, MonsterSummary } from '..';
+/**
+ * API型定義
+ * Hono RPCで利用する型定義
+ *
+ */
+
+// モンスター関連API
+export type MonstersApi = {
+  // モンスター一覧取得
+  'GET /monsters': {
+    response: ApiResponse<{
+      monsters: MonsterSummary[];
+      count: number;
+    }>;
+  };
+  // モンスター詳細取得
+  'GET /monsters/:id': {
+    param: { id: string };
+    response: ApiResponse<{
+      monster: Monster;
+    }>;
+  };
+};
+
+// ユーザー関連API
+export type UserApi = {
+  // ユーザープロフィール取得
+  'GET /user/profile': {
+    response: ApiResponse<{
+      profile: {
+        id: string;
+        displayName: string;
+        avatarUrl?: string;
+      };
+    }>;
+  };
+  // ユーザープロフィール更新
+  'PUT /user/profile': {
+    json: {
+      displayName?: string;
+      avatarUrl?: string;
+    };
+
+    response: ApiResponse<{
+      success: boolean;
+    }>;
+  };
+};
+
+// ゲームプレイ関連API
+export type GameplayApi = {
+  // プレイヤーデータ取得
+  'GET /gameplay/player-data': {
+    response: ApiResponse<{
+      playerId: string;
+      monsters: {
+        id: number;
+        name: string;
+        type: string;
+        level: number;
+      }[];
+      inventory: {
+        id: number;
+        name: string;
+        type: string;
+        quantity: number;
+      }[];
+    }>;
+  };
+  // ゲーム進行状況保存
+  'POST /gameplay/save': {
+    json: {
+      position: { x: number; y: number; mapId: number };
+      monsters: { id: number; experience: number; hp: number }[];
+      inventory: { id: number; quantity: number }[];
+    };
+    response: ApiResponse<{
+      success: boolean;
+      savedAt: string;
+    }>;
+  };
+};
+
+// 合成型としてAPIを定義
+export type Api = MonstersApi & UserApi & GameplayApi;
