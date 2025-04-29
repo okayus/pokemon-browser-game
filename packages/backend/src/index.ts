@@ -1,30 +1,67 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import type { Env } from './types';
-import { apiRouter } from './routes/api';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
 
-// アプリケーションのメインインスタンス
-const app = new Hono<{ Bindings: Env }>();
+import apiRoutes from './routes';
+
+// 環境型定義
+type Bindings = {
+  DB: D1Database;
+  GAME_STORE: KVNamespace;
+};
+
+// アプリケーションの作成
+const app = new Hono<{ Bindings: Bindings }>();
 
 // ミドルウェアの設定
-app.use('*', logger());
-app.use('*', cors({
-  origin: ['http://localhost:3000', 'https://pokemon-browser-game.pages.dev'],
-  credentials: true,
-}));
+app.use(
+  '*',
+  logger(),
+  cors({
+    origin: ['http://localhost:3000', 'https://pokemon-browser-game.pages.dev'],
+    credentials: true,
+  })
+);
 
-// ヘルスチェック用エンドポイント
+// ヘルスチェックエンドポイント
 app.get('/', (c) => {
   return c.json({
-    status: 'ok',
     message: 'Pokemon Browser Game API',
-    version: '0.1.0',
+    status: 'OK',
+    version: 'v1.0.0',
   });
 });
 
-// APIルーターをマウント
-app.route('/api', apiRouter);
+// API ルーティング
+app.route('/api', apiRoutes);
 
-// Workerのエクスポート
+// グローバルなエラーハンドラー
+app.onError((err, c) => {
+  console.error(`${err}`);
+  return c.json(
+    {
+      error: {
+        message: 'Internal Server Error',
+        detail: process.env.NODE_ENV === 'development' ? `${err}` : undefined,
+      },
+    },
+    500
+  );
+});
+
+// 404 ハンドラー
+app.notFound((c) => {
+  return c.json(
+    {
+      error: {
+        message: 'Not Found',
+        detail: `Route ${c.req.url} not found`,
+      },
+    },
+    404
+  );
+});
+
 export default app;
