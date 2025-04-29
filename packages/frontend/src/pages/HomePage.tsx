@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+// 未使用のインポートを削除
+// import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   return (
