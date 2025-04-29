@@ -14,9 +14,9 @@ watch_dir = "src"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 # [[d1_databases]]
-# binding = "DB"
-# database_name = "pokemon-game-db"
-# database_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+binding = "DB"
+database_name = "pokelike"
+database_id = "c63d6cf7-90af-440b-9b16-937eb34c0195"
 
 [triggers]
 crons = [ ]

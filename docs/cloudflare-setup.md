@@ -17,7 +17,7 @@
 4. 「Connect to Git」を選択
 5. GitHubと連携し、リポジトリを選択
 6. 以下の設定を行います：
-   - プロジェクト名: `pokemon-game-frontend`
+   - プロジェクト名: `pokemon-browser-game`
    - 本番ブランチ: `main`
    - ビルドコマンド: `npm run build:frontend`
    - ビルド出力ディレクトリ: `packages/frontend/dist`
@@ -46,7 +46,7 @@
 
 1. 「D1」セクションに移動
 2. 「Create database」をクリック
-3. データベース名を `pokemon-game-db` に設定
+3. データベース名を `pokelike` に設定
 4. 「Create」をクリック
 5. 作成されたデータベースIDをメモ
 
@@ -86,7 +86,7 @@ id = "あなたのKV名前空間ID"
 # D1データベース
 [[d1_databases]]
 binding = "DB"
-database_name = "pokemon-game-db"
+database_name = "pokelike"
 database_id = "あなたのD1データベースID"
 
 [triggers]
