@@ -1,0 +1,26 @@
+name = "pokemon-game-api"
+main = "dist/index.js"
+compatibility_date = "2024-04-29"
+
+[build]
+command = "npm run build"
+watch_dir = "src"
+
+# [vars]
+# MY_VARIABLE = "production_value"
+
+# [[kv_namespaces]]
+# binding = "GAME_STORE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [[d1_databases]]
+binding = "DB"
+database_name = "pokelike"
+database_id = "c63d6cf7-90af-440b-9b16-937eb34c0195"
+
+[triggers]
+crons = [ ]
+
+# [env.staging]
+# name = "pokemon-game-api-staging"
+# workers_dev = true
