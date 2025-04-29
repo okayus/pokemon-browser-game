@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
-import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
+// 未使用のインポートを削除
+// import { zValidator } from '@hono/zod-validator';
+// import { z } from 'zod';
 
 import apiRoutes from './routes';
 
