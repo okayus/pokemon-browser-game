@@ -1,5 +1,4 @@
-// 未使用のインポートを削除
-// import { Link } from 'react-router-dom';
+import MonsterList from '../components/MonsterList';
 
 const HomePage = () => {
   return (
@@ -23,6 +22,11 @@ const HomePage = () => {
             </button>
           </div>
         </div>
+      </section>
+      
+      {/* モンスターリストを表示 */}
+      <section className="py-8">
+        <MonsterList />
       </section>
     </div>
   );
