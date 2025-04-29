@@ -13,6 +13,7 @@
     "@hono/zod-validator": "^0.1.11",
     "drizzle-orm": "^0.30.4",
     "hono": "^4.1.0",
+    "shared": "^0.1.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
