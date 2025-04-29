@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { client } from '../lib/api';
 import type { MonsterSummary } from 'shared';
 
@@ -48,8 +49,9 @@ export default function MonsterList() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {monsters.map((monster) => (
-          <div 
-            key={monster.id} 
+          <Link
+            to={`/monsters/${monster.id}`}
+            key={monster.id}
             className="bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow"
           >
             <h3 className="font-bold text-lg">{monster.name}</h3>
@@ -59,7 +61,8 @@ export default function MonsterList() {
               </span>
             </div>
             <p className="mt-2 text-gray-600">レベル: {monster.level}</p>
-          </div>
+            <p className="mt-3 text-blue-500 text-sm">詳細を見る →</p>
+          </Link>
         ))}
       </div>
     </div>
