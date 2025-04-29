@@ -10,7 +10,6 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@hono/client": "^4.1.0",
     "hono": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
