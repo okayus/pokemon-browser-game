@@ -16,17 +16,36 @@
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "npm run test -w packages/frontend",
     "test:backend": "npm run test -w packages/backend",
-    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:frontend": "npm run lint -w packages/frontend",
     "lint:backend": "npm run lint -w packages/backend",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
   },
   "author": "",
   "license": "MIT"
