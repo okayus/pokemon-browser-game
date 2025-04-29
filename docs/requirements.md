@@ -14,7 +14,9 @@ TypeScriptを使用したフルスタックWeb開発の学習を目的とした�
 ## 機能要件
 
 ### ユーザー関連
-- Googleアカウントなどでのソーシャルログイン（個人情報やパスワードはDBに保存しない）
+- Firebase Authenticationを使用したユーザー認証
+  - Googleアカウントでのソーシャルログイン
+  - メール/パスワード認証（オプション）
 - プレイヤープロフィールの作成と編集
 - プレイ履歴の保存と表示
 
@@ -36,7 +38,7 @@ TypeScriptを使用したフルスタックWeb開発の学習を目的とした�
 - 応答時間：APIリクエストは500ms以内
 
 ### セキュリティ
-- 認証はOAuthプロバイダーを使用（パスワード管理なし）
+- Firebase Authenticationによる安全な認証
 - 個人情報はDBに保存しない
 - APIへのアクセス制限
 
@@ -54,6 +56,7 @@ TypeScriptを使用したフルスタックWeb開発の学習を目的とした�
 - TypeScript
 - React (UI ライブラリとしてTailwind CSS と組み合わせて使用)
 - Hono（クライアントAPIのために使用）
+- Firebase Authentication
 - Vitest（テスト）
 - Playwright（E2Eテスト）
 - Storybook（UIコンポーネント開発）
@@ -64,9 +67,11 @@ TypeScriptを使用したフルスタックWeb開発の学習を目的とした�
 - Drizzle（ORM）
 - Cloudflare Workers（サーバーレス実行環境）
 - Cloudflare D1 / KV（データベース）
+- Firebase Admin SDK（認証検証）
 
 ### インフラ
 - Cloudflare Pages（ホスティング）
+- Firebase（認証サービス）
 - GitHub Actions（CI/CD）
 
 ### 開発ツール
@@ -101,7 +106,7 @@ pokemon-browser-game/
 
 初期リリースでは以下の機能を実装します：
 
-1. ソーシャルログインとプロフィール作成
+1. Firebase Authenticationによるログインとプロフィール作成
 2. 基本的なマップ移動システム
 3. シンプルなモンスター遭遇・捕獲システム
 4. 基本的なバトルシステム
@@ -110,6 +115,7 @@ pokemon-browser-game/
 ## タイムライン
 
 - 初期設計と環境構築：1週間
+- Firebase Authentication実装：1週間
 - バックエンドAPI開発：2週間
 - フロントエンド基本機能開発：2週間
 - ゲーム機能実装：3週間
