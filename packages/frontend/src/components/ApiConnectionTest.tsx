@@ -1,0 +1,58 @@
+import { useState, useEffect } from 'react';
+import { client } from '../lib/api';
+
+export default function ApiConnectionTest() {
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [message, setMessage] = useState('');
+  const [apiEndpoint, setApiEndpoint] = useState('');
+
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        setStatus('loading');
+        
+        // APIベースURLを取得（デバッグ用）
+        const baseUrl = typeof client._fetch === 'function' 
+          ? client._fetch.toString().match(/fetch\((["'])(.*?)\1/)?.[2] || 'unknown'
+          : 'unknown';
+        
+        setApiEndpoint(baseUrl);
+        
+        // ヘルスチェックエンドポイントを呼び出す
+        const response = await fetch(`${baseUrl}/health`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          setStatus('success');
+          setMessage(`API接続成功: ${data.message || JSON.stringify(data)}`);
+        } else {
+          setStatus('error');
+          setMessage(`API接続エラー: ${data.error?.message || '不明なエラー'}`);
+        }
+      } catch (err) {
+        console.error('API接続テスト中にエラーが発生:', err);
+        setStatus('error');
+        setMessage(`API接続テスト中にエラーが発生: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    };
+
+    checkApiConnection();
+  }, []);
+
+  return (
+    <div className="my-4 p-4 border rounded">
+      <h3 className="text-lg font-bold mb-2">APIサーバー接続テスト</h3>
+      <div className="mb-2">
+        <span className="font-medium">API Endpoint: </span>
+        <code className="bg-gray-100 px-2 py-1 rounded">{apiEndpoint}</code>
+      </div>
+      {status === 'loading' ? (
+        <p className="text-blue-600">接続テスト中...</p>
+      ) : status === 'success' ? (
+        <p className="text-green-600">{message}</p>
+      ) : (
+        <p className="text-red-600">{message}</p>
+      )}
+    </div>
+  );
+}
