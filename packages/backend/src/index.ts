@@ -5,10 +5,10 @@ import { logger } from 'hono/logger';
 import apiRoutes from './routes';
 import { Api } from 'shared/src/api';
 
-// 環境型定義
+// 環境型定義 - optional型にして開発環境でもエラーが出ないようにする
 type Bindings = {
-  DB: D1Database;
-  GAME_STORE: KVNamespace;
+  DB?: D1Database;
+  GAME_STORE?: KVNamespace;
 };
 
 // アプリケーションの作成
