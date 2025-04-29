@@ -16,15 +16,15 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240320.1",
-    "@types/node": "^20.11.29",
+    "@cloudflare/workers-types": "^4.20240418.0",
+    "@types/node": "^20.12.4",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
-    "drizzle-kit": "^0.21.1",
+    "drizzle-kit": "^0.22.3",
     "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
     "typescript": "^5.4.2",
     "vitest": "^1.4.0",
-    "wrangler": "^3.37.0"
+    "wrangler": "^3.35.0"
   }
 }
