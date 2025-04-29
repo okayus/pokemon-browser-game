@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev src/index.ts --local",
+    "dev": "wrangler dev src/index.ts --local --port 8787 --ip 127.0.0.1",
     "build": "tsc && esbuild src/index.ts --bundle --minify --format=esm --outfile=dist/index.js",
     "lint": "eslint 'src/**/*.ts' --fix",
     "deploy": "wrangler deploy",
