@@ -5,23 +5,21 @@ import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
   server: {
     port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8787',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
+  },
+  resolve: {
+    alias: {
+      // パスエイリアス設定
+      'shared': resolve(__dirname, '../shared/src'),
     },
   },
+  optimizeDeps: {
+    include: ['shared'],
+  },
   build: {
-    outDir: 'dist',
-    sourcemap: true,
+    commonjsOptions: {
+      include: [/shared/, /node_modules/],
+    },
   },
 });
