@@ -78,3 +78,6 @@ export interface ApiResponse<T> {
     detail?: string;
   };
 }
+
+// API型定義をエクスポート
+export * from './api';
