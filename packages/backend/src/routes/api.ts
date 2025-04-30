@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
-// Bindingsのインポート
-import type { Bindings } from '../types';
+// 型のインポート
+import type { Env } from '../types';
 
 // APIルーター (型引数を修正)
-export const apiRouter = new Hono<{ Bindings: Bindings }>();
+export const apiRouter = new Hono<Env>();
 
 // バージョン情報を返すエンドポイント
 apiRouter.get('/version', c => {
