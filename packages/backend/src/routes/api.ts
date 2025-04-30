@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
-// Envのインポートを削除し、Bindingsをインポート
+// Bindingsのインポート
 import type { Bindings } from '../types';
 
 // APIルーター (型引数を修正)
@@ -70,7 +70,7 @@ apiRouter.get(
       id: z.string().transform(val => parseInt(val, 10)),
     })
   ),
-  c => {
+  async c => {
     const { id } = c.req.valid('param');
 
     // 本来はDBから取得する処理
