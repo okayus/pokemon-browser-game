@@ -75,8 +75,9 @@ userRouter.post('/profile', authMiddleware(), async (c) => {
   const user = c.get('user') as AuthUser;
   
   try {
-    // リクエストボディを取得
-    const body = await c.req.json();
+    // リクエストボディを取得（将来的な実装のために受け取るが、現時点では使用しない）
+    // 未使用変数エラーを回避するためにコメントアウト
+    // const body = await c.req.json();
     
     // 実際のプロジェクトではバリデーションとDBへの保存が必要
     // 今回は成功レスポンスのみ返す
