@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 /**
  * 認証が必要なルートを保護するコンポーネント
- * 認証されていない場合は指定されたパスにリダイレクトする
+ * 認証されていない場合はリダイレクトします
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
@@ -18,10 +18,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { authState } = useAuth();
   const location = useLocation();
 
-  // 認証状態のロード中はローディング表示
+  // ロード中は何も表示しない
   if (authState.isLoading) {
     return (
-      <div className="flex items-center justify-center w-full h-screen">
+      <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -29,11 +29,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // 認証されていない場合はリダイレクト
   if (!authState.isAuthenticated) {
-    // 現在のパスを state に保存して、ログイン後に戻れるようにする
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  // 認証されている場合は子要素を表示
+  // 認証済みの場合は子要素を表示
   return <>{children || <Outlet />}</>;
 };
 
