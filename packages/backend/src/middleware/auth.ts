@@ -1,5 +1,5 @@
 import { Context, MiddlewareHandler, Next } from 'hono';
-import { auth } from '../lib/firebase-admin';
+import { initFirebaseAdmin } from '../lib/firebase-admin';
 
 // 認証エラーのレスポンス生成
 const unauthorizedResponse = (c: Context) => {
@@ -38,6 +38,9 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
     const token = authHeader.substring(7); // "Bearer "の後の部分
 
     try {
+      // Firebase Adminを初期化
+      const auth = initFirebaseAdmin(c.env);
+      
       // トークンの検証
       const decodedToken = await auth.verifyIdToken(token);
       
@@ -82,6 +85,9 @@ export const optionalAuthMiddleware = (): MiddlewareHandler => {
     const token = authHeader.substring(7);
 
     try {
+      // Firebase Adminを初期化
+      const auth = initFirebaseAdmin(c.env);
+      
       // トークンの検証
       const decodedToken = await auth.verifyIdToken(token);
       
