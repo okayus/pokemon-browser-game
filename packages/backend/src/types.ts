@@ -1,24 +1,30 @@
 import { UserProfile } from 'shared';
 
-// Hono環境変数の型拡張
-// Cloudflare Workersの環境変数
-declare module 'hono' {
-  interface Env {
-    DB?: D1Database;
-    GAME_STORE?: KVNamespace;
-    NODE_ENV?: string;
-    FIREBASE_PROJECT_ID?: string;
-    FIREBASE_CLIENT_EMAIL?: string;
-    FIREBASE_PRIVATE_KEY?: string;
-    ALLOWED_ORIGINS?: string;
-  }
+// Hono環境変数の型定義 (Bindingsとしてエクスポート)
+export type Bindings = {
+  DB?: D1Database;
+  GAME_STORE?: KVNamespace;
+  NODE_ENV?: string;
+  FIREBASE_PROJECT_ID?: string;
+  FIREBASE_CLIENT_EMAIL?: string;
+  FIREBASE_PRIVATE_KEY?: string;
+  ALLOWED_ORIGINS?: string;
+};
 
-  // 認証済みユーザー情報の型
+// Honoコンテキストの型拡張
+declare module 'hono' {
+  // Envインターフェースの拡張を削除
+  // interface Env {
+  //   Bindings: Bindings; // c.envでアクセスする際の型
+  // }
+
+  // 認証済みユーザー情報の型 (これは残す)
   interface ContextVariableMap {
     user?: AuthUser;
   }
 }
 
+// ... (AuthUser, UserProfileDBなどの定義はそのまま) ...
 // 認証ユーザーの型定義
 export interface AuthUser {
   uid: string;

@@ -3,19 +3,16 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
 import apiRoutes from './routes';
+// エクスポートされたBindings型をインポート
+import type { Bindings } from './types';
 
-// 環境型定義 - optional型にして開発環境でもエラーが出ないようにする
-type Bindings = {
-  DB?: D1Database;
-  GAME_STORE?: KVNamespace;
-  // NODE_ENV を追加 (string型、optional)
-  NODE_ENV?: string;
-};
+// 環境型定義は削除（Honoの型引数で指定するため）
+// type Bindings = { ... }; // 削除
 
-// アプリケーションの作成
+// アプリケーションの作成 (型引数を修正)
 const app = new Hono<{ Bindings: Bindings }>();
 
-// ミドルウェアの設定
+// ... (ミドルウェア、ルート設定などはそのまま) ...
 app.use(
   '*',
   logger(),
@@ -44,11 +41,12 @@ app.route('/api', apiRoutes);
 // グローバルなエラーハンドラー
 app.onError((err, c) => {
   console.error(`${err}`);
+  // c.env.NODE_ENV を c.env.Bindings.NODE_ENV に変更する必要があるか確認
+  // Honoの型拡張により c.env.NODE_ENV でアクセスできるはず
   return c.json(
     {
       error: {
         message: 'Internal Server Error',
-        // detail: process.env.NODE_ENV === 'development' ? `${err}` : undefined,
         detail: c.env.NODE_ENV === 'development' ? `${err}` : undefined,
       },
     },
