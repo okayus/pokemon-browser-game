@@ -13,8 +13,10 @@ export type Bindings = {
 
 // Honoコンテキストの型拡張
 declare module 'hono' {
-  // Envインターフェースを拡張して環境変数を型付け
-  interface Env extends Bindings {}
+  // Bindingsを含むEnvironment型定義（Envという名前の衝突を避ける）
+  interface Env {
+    Bindings: Bindings;
+  }
 
   // 認証済みユーザー情報の型
   interface ContextVariableMap {
