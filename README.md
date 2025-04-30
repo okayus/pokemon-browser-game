@@ -48,19 +48,39 @@ npm install
 npm run dev
 ```
 
-## 依存関係の更新
+## 依存関係管理
+
+### 通常の依存関係更新
 
 新しいパッケージを追加した後は、以下のコマンドでpackage-lock.jsonを更新してください：
 
 ```bash
-# package-lock.jsonを更新
+# package-lock.jsonを更新（パッケージをインストールせず、lockファイルのみ更新）
 npm run update-lockfile
 
 # または依存関係を完全に再インストール
 npm run install-fresh
 ```
 
+### Firebase関連の依存関係
+
+Firebaseや他の重要なパッケージを更新した後は、必ず以下のコマンドを実行して、package-lock.jsonを更新してください：
+
+```bash
+# package-lock.jsonに反映されているか確認
+npm run update-package-lock
+```
+
 CI/CDパイプラインはpackage-lock.jsonがpackage.jsonの内容と同期していることを検証します。同期していない場合はビルドが失敗します。
+
+### CI失敗時の対応方法
+
+CIが「Missing dependencies in package-lock.json」などのエラーで失敗した場合：
+
+1. `fix/dependencies` などのブランチを作成
+2. `npm install` または `npm run update-package-lock` を実行
+3. 更新された `package-lock.json` をコミット
+4. PRを作成
 
 ## Firebaseの設定
 
