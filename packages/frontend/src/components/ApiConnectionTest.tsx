@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// 未使用のclientをインポートしないようにする
+import { api, API_BASE_URL } from '../lib/api';
 
 export default function ApiConnectionTest() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -10,21 +10,17 @@ export default function ApiConnectionTest() {
     const checkApiConnection = async () => {
       try {
         setStatus('loading');
+        setApiEndpoint(API_BASE_URL);
         
-        // APIベースURL - 開発環境のURLを直接指定
-        const baseUrl = 'http://127.0.0.1:8787/api';
-        setApiEndpoint(baseUrl);
+        // 新しいAPIクライアントを使用
+        const healthData = await api.checkHealth();
         
-        // ヘルスチェックエンドポイントを呼び出す
-        const response = await fetch(`${baseUrl}/health`);
-        const data = await response.json();
-        
-        if (response.ok) {
+        if (healthData && healthData.status === 'healthy') {
           setStatus('success');
-          setMessage(`API接続成功: ${data.message || JSON.stringify(data)}`);
+          setMessage(`API接続成功: ${healthData.message || JSON.stringify(healthData)}`);
         } else {
           setStatus('error');
-          setMessage(`API接続エラー: ${data.error?.message || '不明なエラー'}`);
+          setMessage(`API接続エラー: ${healthData?.error?.message || '不明なエラー'}`);
         }
       } catch (err) {
         console.error('API接続テスト中にエラーが発生:', err);
