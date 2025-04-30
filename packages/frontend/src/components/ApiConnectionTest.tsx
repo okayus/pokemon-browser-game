@@ -11,11 +11,8 @@ export default function ApiConnectionTest() {
       try {
         setStatus('loading');
         
-        // APIベースURLを取得（デバッグ用）
-        const baseUrl = typeof client._fetch === 'function' 
-          ? client._fetch.toString().match(/fetch\((["'])(.*?)\1/)?.[2] || 'unknown'
-          : 'unknown';
-        
+        // APIベースURL - 開発環境のURLを直接指定（型エラー回避のため）
+        const baseUrl = 'http://127.0.0.1:8787/api';
         setApiEndpoint(baseUrl);
         
         // ヘルスチェックエンドポイントを呼び出す
