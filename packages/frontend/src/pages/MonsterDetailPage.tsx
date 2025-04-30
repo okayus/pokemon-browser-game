@@ -17,10 +17,9 @@ const MonsterDetailPage = () => {
 
       try {
         setLoading(true);
-        const response = await client.monsters[':id'].$get({
-          param: { id },
-        });
         
+        // 型エラー回避のため、fetch APIを直接使用
+        const response = await fetch(`http://127.0.0.1:8787/api/monsters/${id}`);
         const data = await response.json();
         
         if (response.ok && data.data) {
