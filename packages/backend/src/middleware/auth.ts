@@ -1,5 +1,4 @@
 import { Context, MiddlewareHandler } from 'hono';
-import type { Next } from 'hono';
 import { initFirebaseAdmin } from '../lib/firebase-admin';
 import { Env } from '../types';
 
