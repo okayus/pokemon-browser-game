@@ -21,7 +21,9 @@
     "lint:backend": "npm run lint -w packages/backend",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update-lockfile": "npm install --package-lock-only",
+    "install-fresh": "npm install"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
