@@ -1,6 +1,6 @@
 import { UserProfile } from 'shared';
 
-// Hono環境変数の型定義 (Bindingsとしてエクスポート)
+// Hono環境変数の型定義
 export type Bindings = {
   DB?: D1Database;
   GAME_STORE?: KVNamespace;
@@ -13,18 +13,15 @@ export type Bindings = {
 
 // Honoコンテキストの型拡張
 declare module 'hono' {
-  // Envインターフェースの拡張を削除
-  // interface Env {
-  //   Bindings: Bindings; // c.envでアクセスする際の型
-  // }
+  // Envインターフェースを拡張して環境変数を型付け
+  interface Env extends Bindings {}
 
-  // 認証済みユーザー情報の型 (これは残す)
+  // 認証済みユーザー情報の型
   interface ContextVariableMap {
     user?: AuthUser;
   }
 }
 
-// ... (AuthUser, UserProfileDBなどの定義はそのまま) ...
 // 認証ユーザーの型定義
 export interface AuthUser {
   uid: string;
