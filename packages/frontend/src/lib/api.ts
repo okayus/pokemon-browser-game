@@ -1,11 +1,36 @@
 // 本来はHono Clientを使用しますが、TypeScriptの型エラーを解決するため
 // 一時的に直接fetchを使用するシンプルなAPI関数を実装
 import type { Monster, MonsterSummary } from 'shared';
+import { useAuth } from '../contexts/AuthContext';
 
 // 環境に応じたベースURLを設定
-const API_BASE_URL = import.meta.env.DEV
-  ? 'http://127.0.0.1:8787/api'  // 開発環境
-  : 'https://api.pokemon-browser-game.workers.dev/api';  // 本番環境
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8787/api';
+
+/**
+ * 認証付きリクエストを送信する
+ * @param endpoint エンドポイント
+ * @param options FetchのOptions
+ * @returns レスポンス
+ */
+export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
+  const { getIdToken } = useAuth();
+  
+  // 認証トークンを取得
+  const token = await getIdToken();
+  
+  // ヘッダーにトークンを追加
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
+  
+  // リクエスト送信
+  return fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+};
 
 // APIクライアント関数
 const api = {
@@ -37,6 +62,34 @@ const api = {
       return null;
     } catch (error) {
       console.error('Error fetching monster details:', error);
+      return null;
+    }
+  },
+  
+  // ユーザープロフィール取得 (認証必須)
+  async getUserProfile(): Promise<any> {
+    try {
+      const { getIdToken } = useAuth();
+      const token = await getIdToken();
+      
+      if (!token) {
+        throw new Error('認証が必要です');
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/user/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.data) {
+        return data.data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
       return null;
     }
   },
