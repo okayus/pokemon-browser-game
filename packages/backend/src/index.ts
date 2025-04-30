@@ -3,12 +3,13 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
 import apiRoutes from './routes';
-import { Api } from 'shared/src/api';
 
 // 環境型定義 - optional型にして開発環境でもエラーが出ないようにする
 type Bindings = {
   DB?: D1Database;
   GAME_STORE?: KVNamespace;
+  // NODE_ENV を追加 (string型、optional)
+  NODE_ENV?: string;
 };
 
 // アプリケーションの作成
@@ -22,14 +23,14 @@ app.use(
     origin: [
       'http://localhost:3000',
       'http://127.0.0.1:3000',
-      'https://pokemon-browser-game.pages.dev'
+      'https://pokemon-browser-game.pages.dev',
     ],
     credentials: true,
   })
 );
 
 // ヘルスチェックエンドポイント
-app.get('/', (c) => {
+app.get('/', c => {
   return c.json({
     message: 'Pokemon Browser Game API',
     status: 'OK',
@@ -47,7 +48,8 @@ app.onError((err, c) => {
     {
       error: {
         message: 'Internal Server Error',
-        detail: process.env.NODE_ENV === 'development' ? `${err}` : undefined,
+        // detail: process.env.NODE_ENV === 'development' ? `${err}` : undefined,
+        detail: c.env.NODE_ENV === 'development' ? `${err}` : undefined,
       },
     },
     500
@@ -55,7 +57,7 @@ app.onError((err, c) => {
 });
 
 // 404 ハンドラー
-app.notFound((c) => {
+app.notFound(c => {
   return c.json(
     {
       error: {
