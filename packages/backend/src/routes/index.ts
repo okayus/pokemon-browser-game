@@ -3,6 +3,8 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { Api } from 'shared/src/api';
 import healthRoutes from './health';
+import userRoutes from './user';
+import { optionalAuthMiddleware } from '../middleware/auth';
 
 // 型定義 - 開発環境でも動作するようにオプショナルにする
 type Bindings = {
@@ -13,8 +15,12 @@ type Bindings = {
 // APIルーターの作成
 const api = new Hono<{ Bindings: Bindings }>();
 
-// ヘルスチェックルートをマウント
+// ルートへのマウント
 api.route('/health', healthRoutes);
+api.route('/user', userRoutes);
+
+// 一般APIには任意認証ミドルウェアを適用
+api.use('*', optionalAuthMiddleware());
 
 // モンスターリスト取得 - Hono RPCに対応
 api.get('/monsters', async (c) => {
@@ -139,67 +145,26 @@ api.get(
   }
 );
 
-// ユーザープロフィール取得API
-api.get('/user/profile', async (c) => {
-  try {
-    // モックデータ
-    const profile = {
-      id: 'user123',
-      displayName: 'ポケモントレーナー',
-      avatarUrl: 'https://example.com/avatar.png',
-    };
-
-    return c.json({
-      data: { profile }
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching user profile:', error);
-    return c.json(
-      {
-        error: {
-          message: 'Failed to fetch user profile',
-        },
-      },
-      500
-    );
-  }
-});
-
-// ユーザープロフィール更新API
-api.put('/user/profile', async (c) => {
-  try {
-    const data = await c.req.json();
-    
-    // 実際にはDBに保存する処理
-    // eslint-disable-next-line no-console
-    console.log('Updating user profile:', data);
-    
-    return c.json({
-      data: { 
-        success: true 
-      }
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error updating user profile:', error);
-    return c.json(
-      {
-        error: {
-          message: 'Failed to update user profile',
-        },
-      },
-      500
-    );
-  }
-});
-
-// プレイヤーデータ取得API
+// プレイヤーデータ取得API（認証が必要）
 api.get('/gameplay/player-data', async (c) => {
   try {
-    // モックデータ
+    // ユーザー情報を取得
+    const user = c.get('user');
+    
+    if (!user) {
+      return c.json(
+        {
+          error: {
+            message: 'Authentication required',
+          },
+        },
+        401
+      );
+    }
+
+    // モックデータ（実際には認証済みユーザーIDを使用してDBから取得）
     const playerData = {
-      playerId: 'player123',
+      userId: user.uid,
       monsters: [
         { id: 1, name: 'フレイムドラゴン', type: 'fire', level: 12 },
         { id: 3, name: 'サンダーバード', type: 'electric', level: 8 },
@@ -227,9 +192,23 @@ api.get('/gameplay/player-data', async (c) => {
   }
 });
 
-// ゲーム進行状況保存API
+// ゲーム進行状況保存API（認証が必要）
 api.post('/gameplay/save', async (c) => {
   try {
+    // ユーザー情報を取得
+    const user = c.get('user');
+    
+    if (!user) {
+      return c.json(
+        {
+          error: {
+            message: 'Authentication required',
+          },
+        },
+        401
+      );
+    }
+
     const data = await c.req.json();
     
     // 実際にはDBに保存する処理
@@ -240,6 +219,7 @@ api.post('/gameplay/save', async (c) => {
       data: { 
         success: true,
         savedAt: new Date().toISOString(),
+        userId: user.uid,
       }
     });
   } catch (error) {
