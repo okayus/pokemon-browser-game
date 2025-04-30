@@ -1,10 +1,10 @@
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import type { Env } from 'hono';
+import type { Bindings } from '../types';
 
 // 環境変数を受け取るように修正
-// Cloudflare Workersでは process.env が使えないため、c.env から環境変数を取得する
-const initFirebaseAdmin = (env: Env) => {
+// Cloudflare Workersでは process.env が使えないため、env から環境変数を取得する
+const initFirebaseAdmin = (env: Bindings) => {
   // Firebase設定
   const firebaseConfig = {
     projectId: env.FIREBASE_PROJECT_ID || '',
