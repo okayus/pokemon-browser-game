@@ -34,6 +34,8 @@ api.get('/monsters', async (c) => {
       }
     });
   } catch (error) {
+    // ESLint警告を抑制
+    // eslint-disable-next-line no-console
     console.error('Error fetching monsters:', error);
     return c.json(
       {
@@ -122,6 +124,8 @@ api.get(
         } 
       });
     } catch (error) {
+      // ESLint警告を抑制
+      // eslint-disable-next-line no-console
       console.error(`Error fetching monster ${c.req.param('id')}:`, error);
       return c.json(
         {
@@ -149,6 +153,7 @@ api.get('/user/profile', async (c) => {
       data: { profile }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching user profile:', error);
     return c.json(
       {
@@ -167,6 +172,7 @@ api.put('/user/profile', async (c) => {
     const data = await c.req.json();
     
     // 実際にはDBに保存する処理
+    // eslint-disable-next-line no-console
     console.log('Updating user profile:', data);
     
     return c.json({
@@ -175,6 +181,7 @@ api.put('/user/profile', async (c) => {
       }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error updating user profile:', error);
     return c.json(
       {
@@ -207,6 +214,7 @@ api.get('/gameplay/player-data', async (c) => {
       data: playerData
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching player data:', error);
     return c.json(
       {
@@ -225,6 +233,7 @@ api.post('/gameplay/save', async (c) => {
     const data = await c.req.json();
     
     // 実際にはDBに保存する処理
+    // eslint-disable-next-line no-console
     console.log('Saving game progress:', data);
     
     return c.json({
@@ -234,6 +243,7 @@ api.post('/gameplay/save', async (c) => {
       }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error saving game progress:', error);
     return c.json(
       {
