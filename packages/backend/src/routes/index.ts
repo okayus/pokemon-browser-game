@@ -5,15 +5,10 @@ import { Api } from 'shared/src/api';
 import healthRoutes from './health';
 import userRoutes from './user';
 import { optionalAuthMiddleware } from '../middleware/auth';
-
-// 型定義 - 開発環境でも動作するようにオプショナルにする
-type Bindings = {
-  DB?: D1Database;
-  GAME_STORE?: KVNamespace;
-};
+import { Env } from '../types';
 
 // APIルーターの作成
-const api = new Hono<{ Bindings: Bindings }>();
+const api = new Hono<Env>();
 
 // ルートへのマウント
 api.route('/health', healthRoutes);
@@ -237,4 +232,4 @@ api.post('/gameplay/save', async (c) => {
 });
 
 // 型アサーションでHono RPCの型を付ける
-export default api as Hono<{ Bindings: Bindings }, Api>;
+export default api as Hono<Env, Api>;

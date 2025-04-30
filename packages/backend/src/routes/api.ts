@@ -1,13 +1,15 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
+// 型のインポート
 import type { Env } from '../types';
 
-// APIルーター
-export const apiRouter = new Hono<{ Bindings: Env }>();
+// APIルーター (型引数を修正)
+export const apiRouter = new Hono<Env>();
 
 // バージョン情報を返すエンドポイント
-apiRouter.get('/version', (c) => {
+apiRouter.get('/version', c => {
+  // c.env.NODE_ENV でアクセス可能
   return c.json({
     success: true,
     data: {
@@ -17,8 +19,9 @@ apiRouter.get('/version', (c) => {
   });
 });
 
+// ... (他のルートはそのまま) ...
 // キャラクター一覧を返すエンドポイント（モック）
-apiRouter.get('/characters', (c) => {
+apiRouter.get('/characters', c => {
   const characters = [
     {
       id: 1,
@@ -51,7 +54,7 @@ apiRouter.get('/characters', (c) => {
       speed: 45,
     },
   ];
-  
+
   return c.json({
     success: true,
     data: { characters },
@@ -59,28 +62,35 @@ apiRouter.get('/characters', (c) => {
 });
 
 // キャラクター詳細を返すエンドポイント
-apiRouter.get('/characters/:id', zValidator('param', z.object({
-  id: z.string().transform(val => parseInt(val, 10)),
-})), (c) => {
-  const { id } = c.req.valid('param');
-  
-  // 本来はDBから取得する処理
-  const character = {
-    id,
-    name: 'ヒトカゲ',
-    type: '炎',
-    level: 5,
-    hp: 39,
-    attack: 52,
-    defense: 43,
-    speed: 65,
-  };
-  
-  return c.json({
-    success: true,
-    data: { character },
-  });
-});
+apiRouter.get(
+  '/characters/:id',
+  zValidator(
+    'param',
+    z.object({
+      id: z.string().transform(val => parseInt(val, 10)),
+    })
+  ),
+  async c => {
+    const { id } = c.req.valid('param');
+
+    // 本来はDBから取得する処理
+    const character = {
+      id,
+      name: 'ヒトカゲ',
+      type: '炎',
+      level: 5,
+      hp: 39,
+      attack: 52,
+      defense: 43,
+      speed: 65,
+    };
+
+    return c.json({
+      success: true,
+      data: { character },
+    });
+  }
+);
 
 // APIルーターをエクスポート
 export type ApiRouterType = typeof apiRouter;

@@ -1,12 +1,22 @@
 // 本来はHono Clientを使用しますが、TypeScriptの型エラーを解決するため
 // 一時的に直接fetchを使用するシンプルなAPI関数を実装
-import type { Monster, MonsterSummary } from 'shared';
+import type { Monster, MonsterSummary, UserProfile } from 'shared';
 import { auth } from './firebase';
 
 // 環境に応じたベースURLを設定
 const API_BASE_URL = import.meta.env.DEV
   ? 'http://127.0.0.1:8787/api'  // 開発環境
   : 'https://api.pokemon-browser-game.workers.dev/api';  // 本番環境
+
+// APIレスポンス基本型
+interface ApiResponse<T> {
+  data?: T;
+  error?: {
+    message: string;
+    detail?: string;
+  };
+  status?: string;
+}
 
 // 認証ヘッダーの取得
 const getAuthHeaders = async (): Promise<HeadersInit> => {
@@ -64,19 +74,19 @@ const api = {
   },
   
   // ヘルスチェック
-  async checkHealth(): Promise<any> {
+  async checkHealth(): Promise<ApiResponse<{ status: string }>> {
     try {
       const headers = await getAuthHeaders();
       const response = await fetch(`${API_BASE_URL}/health`, { headers });
       return await response.json();
     } catch (error) {
       console.error('Health check failed:', error);
-      return { status: 'error', error: String(error) };
+      return { status: 'error', error: { message: String(error) } };
     }
   },
 
   // ユーザープロフィール取得
-  async getUserProfile(): Promise<any> {
+  async getUserProfile(): Promise<UserProfile | null> {
     try {
       const headers = await getAuthHeaders();
       const response = await fetch(`${API_BASE_URL}/user/profile`, { headers });

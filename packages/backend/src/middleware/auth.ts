@@ -1,5 +1,6 @@
-import { Context, MiddlewareHandler, Next } from 'hono';
-import { auth } from '../lib/firebase-admin';
+import { Context, MiddlewareHandler } from 'hono';
+import { initFirebaseAdmin } from '../lib/firebase-admin';
+import { Env } from '../types';
 
 // 認証エラーのレスポンス生成
 const unauthorizedResponse = (c: Context) => {
@@ -15,8 +16,8 @@ const unauthorizedResponse = (c: Context) => {
 };
 
 // 認証ミドルウェア（必須認証）
-export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
-  return async (c: Context, next: Next) => {
+export const authMiddleware = (skipOnDev = false): MiddlewareHandler<Env> => {
+  return async (c, next) => {
     // 開発環境で認証スキップ（オプション）
     if (skipOnDev && c.env.NODE_ENV === 'development') {
       // 開発環境用のモックユーザー情報を設定
@@ -38,6 +39,9 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
     const token = authHeader.substring(7); // "Bearer "の後の部分
 
     try {
+      // Firebase Adminを初期化
+      const auth = initFirebaseAdmin(c.env);
+      
       // トークンの検証
       const decodedToken = await auth.verifyIdToken(token);
       
@@ -51,6 +55,7 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
       // 次の処理へ
       return next();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Authentication error:', error);
       return unauthorizedResponse(c);
     }
@@ -58,8 +63,8 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
 };
 
 // 任意認証ミドルウェア（認証があれば情報を取得、なければスキップ）
-export const optionalAuthMiddleware = (): MiddlewareHandler => {
-  return async (c: Context, next: Next) => {
+export const optionalAuthMiddleware = (): MiddlewareHandler<Env> => {
+  return async (c, next) => {
     // 開発環境の場合
     if (c.env.NODE_ENV === 'development') {
       // 開発環境用のモックユーザー情報を設定
@@ -82,6 +87,9 @@ export const optionalAuthMiddleware = (): MiddlewareHandler => {
     const token = authHeader.substring(7);
 
     try {
+      // Firebase Adminを初期化
+      const auth = initFirebaseAdmin(c.env);
+      
       // トークンの検証
       const decodedToken = await auth.verifyIdToken(token);
       
@@ -93,6 +101,7 @@ export const optionalAuthMiddleware = (): MiddlewareHandler => {
       });
     } catch (error) {
       // 認証エラーがあっても次へ進む（未認証として扱う）
+      // eslint-disable-next-line no-console
       console.error('Optional authentication error:', error);
     }
     
