@@ -1,5 +1,6 @@
 import { Context, MiddlewareHandler, Next } from 'hono';
 import { initFirebaseAdmin } from '../lib/firebase-admin';
+import { Bindings } from '../types';
 
 // 認証エラーのレスポンス生成
 const unauthorizedResponse = (c: Context) => {
@@ -15,8 +16,8 @@ const unauthorizedResponse = (c: Context) => {
 };
 
 // 認証ミドルウェア（必須認証）
-export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
-  return async (c: Context, next: Next) => {
+export const authMiddleware = (skipOnDev = false): MiddlewareHandler<{ Bindings: Bindings }> => {
+  return async (c, next) => {
     // 開発環境で認証スキップ（オプション）
     if (skipOnDev && c.env.NODE_ENV === 'development') {
       // 開発環境用のモックユーザー情報を設定
@@ -61,8 +62,8 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler => {
 };
 
 // 任意認証ミドルウェア（認証があれば情報を取得、なければスキップ）
-export const optionalAuthMiddleware = (): MiddlewareHandler => {
-  return async (c: Context, next: Next) => {
+export const optionalAuthMiddleware = (): MiddlewareHandler<{ Bindings: Bindings }> => {
+  return async (c, next) => {
     // 開発環境の場合
     if (c.env.NODE_ENV === 'development') {
       // 開発環境用のモックユーザー情報を設定
