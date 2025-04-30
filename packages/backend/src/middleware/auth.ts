@@ -1,6 +1,7 @@
-import { Context, MiddlewareHandler, Next } from 'hono';
+import { Context, MiddlewareHandler } from 'hono';
+import type { Next } from 'hono';
 import { initFirebaseAdmin } from '../lib/firebase-admin';
-import { Bindings, Env } from '../types';
+import { Env } from '../types';
 
 // 認証エラーのレスポンス生成
 const unauthorizedResponse = (c: Context) => {
@@ -55,6 +56,7 @@ export const authMiddleware = (skipOnDev = false): MiddlewareHandler<Env> => {
       // 次の処理へ
       return next();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Authentication error:', error);
       return unauthorizedResponse(c);
     }
@@ -100,6 +102,7 @@ export const optionalAuthMiddleware = (): MiddlewareHandler<Env> => {
       });
     } catch (error) {
       // 認証エラーがあっても次へ進む（未認証として扱う）
+      // eslint-disable-next-line no-console
       console.error('Optional authentication error:', error);
     }
     
