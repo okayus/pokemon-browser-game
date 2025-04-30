@@ -22,15 +22,6 @@ export interface MonsterSummary {
   level: number;
 }
 
-// ユーザープロフィール
-export interface UserProfile {
-  id: string;
-  displayName: string;
-  avatarUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // ゲーム内プレイヤー情報
 export interface PlayerData {
   userId: string;
@@ -78,6 +69,9 @@ export interface ApiResponse<T> {
     detail?: string;
   };
 }
+
+// ユーザー関連の型をエクスポート
+export * from './types/user';
 
 // API型定義をエクスポート
 export * from './api';
