@@ -7,6 +7,7 @@ const BASE_URL = import.meta.env.DEV
   : 'https://api.pokemon-browser-game.workers.dev/api';  // 本番環境
 
 // Hono Client インスタンスの作成 - 型アサーションを使用して型エラーを解決
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const client = hc<Api>(BASE_URL) as any;
 
 export { client };
