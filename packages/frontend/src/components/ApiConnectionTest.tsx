@@ -17,10 +17,15 @@ export default function ApiConnectionTest() {
         
         if (healthData && healthData.status === 'healthy') {
           setStatus('success');
-          setMessage(`API接続成功: ${healthData.message || JSON.stringify(healthData)}`);
+          setMessage(`API接続成功: ${healthData.status}`);
         } else {
           setStatus('error');
-          setMessage(`API接続エラー: ${healthData?.error?.message || '不明なエラー'}`);
+          // エラー表示部分を修正
+          if (healthData.error && typeof healthData.error === 'object') {
+            setMessage(`API接続エラー: ${healthData.error.message || '不明なエラー'}`);
+          } else {
+            setMessage(`API接続エラー: ${String(healthData.error) || '不明なエラー'}`);
+          }
         }
       } catch (err) {
         console.error('API接続テスト中にエラーが発生:', err);
