@@ -30,8 +30,11 @@ const Navbar = () => {
               <div className="w-8 h-8 rounded-full animate-pulse bg-blue-500"></div>
             ) : (
               <>
-                <LoginButton />
-                <UserProfile />
+                {authState.isAuthenticated ? (
+                  <UserProfile />
+                ) : (
+                  <LoginButton />
+                )}
               </>
             )}
           </div>
