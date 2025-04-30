@@ -4,7 +4,8 @@ TypeScriptを使用したフルスタックWeb開発の学習プロジェクト�
 
 ## 機能
 
-- Googleアカウントなどでのソーシャルログイン
+- Firebase Authenticationによるユーザー認証
+  - Googleアカウントなどでのソーシャルログイン
 - グリッドベースのマップ移動
 - ポケモンライクなキャラクターの捕獲と育成
 - ターンベースのバトルシステム
@@ -12,9 +13,9 @@ TypeScriptを使用したフルスタックWeb開発の学習プロジェクト�
 
 ## 技術スタック
 
-- **フロントエンド**: TypeScript, React, Tailwind CSS, Hono (Client)
-- **バックエンド**: TypeScript, Hono, Drizzle ORM
-- **インフラ**: Cloudflare Pages, Cloudflare Workers, Cloudflare D1/KV
+- **フロントエンド**: TypeScript, React, Tailwind CSS, Hono (Client), Firebase
+- **バックエンド**: TypeScript, Hono, Drizzle ORM, Firebase Admin SDK
+- **インフラ**: Cloudflare Pages, Cloudflare Workers, Cloudflare D1/KV, Firebase Authentication
 - **テスト**: Vitest, Playwright
 - **CI/CD**: GitHub Actions
 - **その他**: Figma, Storybook
@@ -46,6 +47,29 @@ npm install
 # 開発サーバーの起動
 npm run dev
 ```
+
+## 依存関係の更新
+
+新しいパッケージを追加した後は、以下のコマンドでpackage-lock.jsonを更新してください：
+
+```bash
+# package-lock.jsonを更新
+npm run update-lockfile
+
+# または依存関係を完全に再インストール
+npm run install-fresh
+```
+
+CI/CDパイプラインはpackage-lock.jsonがpackage.jsonの内容と同期していることを検証します。同期していない場合はビルドが失敗します。
+
+## Firebaseの設定
+
+このプロジェクトはFirebase Authenticationを使用しています。使用するには以下の設定が必要です：
+
+1. [Firebase Console](https://console.firebase.google.com/)でプロジェクトを作成
+2. Webアプリとして登録し、設定値を取得
+3. フロントエンド用の環境変数（`.env`ファイル）を設定
+4. Firebase Admin SDK用のサービスアカウントキーを取得し、バックエンド用の環境変数を設定
 
 ## ライセンス
 
