@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { client } from '../lib/api';
+// 未使用のclientをインポートしないようにする
 
 export default function ApiConnectionTest() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -11,7 +11,7 @@ export default function ApiConnectionTest() {
       try {
         setStatus('loading');
         
-        // APIベースURL - 開発環境のURLを直接指定（型エラー回避のため）
+        // APIベースURL - 開発環境のURLを直接指定
         const baseUrl = 'http://127.0.0.1:8787/api';
         setApiEndpoint(baseUrl);
         
