@@ -5,10 +5,10 @@ import { Api } from 'shared/src/api';
 import healthRoutes from './health';
 import userRoutes from './user';
 import { optionalAuthMiddleware } from '../middleware/auth';
-import { Bindings } from '../types';
+import { Env } from '../types';
 
 // APIルーターの作成
-const api = new Hono<{ Bindings: Bindings }>();
+const api = new Hono<Env>();
 
 // ルートへのマウント
 api.route('/health', healthRoutes);
@@ -232,4 +232,4 @@ api.post('/gameplay/save', async (c) => {
 });
 
 // 型アサーションでHono RPCの型を付ける
-export default api as Hono<{ Bindings: Bindings }, Api>;
+export default api as Hono<Env, Api>;
