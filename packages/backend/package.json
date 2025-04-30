@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev src/index.ts --local --port 8787 --ip 127.0.0.1 --local-protocol=http",
-    "build": "tsc && esbuild src/index.ts --bundle --minify --format=esm --outfile=dist/index.js",
+    "build": "tsc && esbuild src/index.ts --bundle --minify --format=esm --platform=node --outfile=dist/index.js",
     "lint": "eslint 'src/**/*.ts' --fix",
     "deploy": "wrangler deploy",
     "test": "vitest run"
