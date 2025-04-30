@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { client } from '../lib/api';
+// 未使用のclientをインポートしないようにする
 import type { Monster } from 'shared';
 
 const MonsterDetailPage = () => {
