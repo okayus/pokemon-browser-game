@@ -5,12 +5,7 @@ import { Api } from 'shared/src/api';
 import healthRoutes from './health';
 import userRoutes from './user';
 import { optionalAuthMiddleware } from '../middleware/auth';
-
-// 型定義 - 開発環境でも動作するようにオプショナルにする
-type Bindings = {
-  DB?: D1Database;
-  GAME_STORE?: KVNamespace;
-};
+import { Bindings } from '../types';
 
 // APIルーターの作成
 const api = new Hono<{ Bindings: Bindings }>();
