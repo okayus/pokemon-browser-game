@@ -27,6 +27,7 @@ const initFirebaseAdmin = (env: Bindings) => {
     return getAuth(app);
   } catch (error) {
     // 開発環境ではログを出力
+    // eslint-disable-next-line no-console
     console.info('Firebase Admin初期化エラー（既に初期化されている場合も含む）:', error);
     
     // すでに初期化済みの場合は、既存のAuthインスタンスを取得
