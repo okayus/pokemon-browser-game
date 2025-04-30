@@ -2,23 +2,19 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { Api } from 'shared/src/api';
+import healthRoutes from './health';
 
-// 型定義
+// 型定義 - 開発環境でも動作するようにオプショナルにする
 type Bindings = {
-  DB: D1Database;
-  GAME_STORE: KVNamespace;
+  DB?: D1Database;
+  GAME_STORE?: KVNamespace;
 };
 
 // APIルーターの作成
 const api = new Hono<{ Bindings: Bindings }>();
 
-// ヘルスチェック
-api.get('/health', (c) => {
-  return c.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-  });
-});
+// ヘルスチェックルートをマウント
+api.route('/health', healthRoutes);
 
 // モンスターリスト取得 - Hono RPCに対応
 api.get('/monsters', async (c) => {
@@ -38,6 +34,8 @@ api.get('/monsters', async (c) => {
       }
     });
   } catch (error) {
+    // ESLint警告を抑制
+    // eslint-disable-next-line no-console
     console.error('Error fetching monsters:', error);
     return c.json(
       {
@@ -83,6 +81,28 @@ api.get(
           speed: 14,
           moves: ['ウォーターショット', 'ハイドロダイブ', 'アクアテール'],
         },
+        3: {
+          id: 3, 
+          name: 'サンダーバード',
+          type: 'electric',
+          level: 12,
+          hp: 90,
+          attack: 14,
+          defense: 7,
+          speed: 16,
+          moves: ['ライトニングボルト', 'ウィングアタック', 'チャージ'],
+        },
+        4: {
+          id: 4,
+          name: 'リーフフェアリー',
+          type: 'grass',
+          level: 6,
+          hp: 75,
+          attack: 8,
+          defense: 10,
+          speed: 11,
+          moves: ['リーフストーム', 'フェアリーダスト', 'ヒーリングポレン'],
+        },
       };
 
       const monster = monsters[monsterId as keyof typeof monsters];
@@ -104,6 +124,8 @@ api.get(
         } 
       });
     } catch (error) {
+      // ESLint警告を抑制
+      // eslint-disable-next-line no-console
       console.error(`Error fetching monster ${c.req.param('id')}:`, error);
       return c.json(
         {
@@ -131,6 +153,7 @@ api.get('/user/profile', async (c) => {
       data: { profile }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching user profile:', error);
     return c.json(
       {
@@ -149,6 +172,7 @@ api.put('/user/profile', async (c) => {
     const data = await c.req.json();
     
     // 実際にはDBに保存する処理
+    // eslint-disable-next-line no-console
     console.log('Updating user profile:', data);
     
     return c.json({
@@ -157,6 +181,7 @@ api.put('/user/profile', async (c) => {
       }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error updating user profile:', error);
     return c.json(
       {
@@ -189,6 +214,7 @@ api.get('/gameplay/player-data', async (c) => {
       data: playerData
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching player data:', error);
     return c.json(
       {
@@ -207,6 +233,7 @@ api.post('/gameplay/save', async (c) => {
     const data = await c.req.json();
     
     // 実際にはDBに保存する処理
+    // eslint-disable-next-line no-console
     console.log('Saving game progress:', data);
     
     return c.json({
@@ -216,6 +243,7 @@ api.post('/gameplay/save', async (c) => {
       }
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error saving game progress:', error);
     return c.json(
       {

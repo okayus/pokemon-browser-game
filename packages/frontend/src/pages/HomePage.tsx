@@ -1,4 +1,5 @@
 import MonsterList from '../components/MonsterList';
+import ApiConnectionTest from '../components/ApiConnectionTest';
 
 const HomePage = () => {
   return (
@@ -24,8 +25,13 @@ const HomePage = () => {
         </div>
       </section>
       
+      {/* API接続テストを表示 */}
+      <section className="py-4">
+        <ApiConnectionTest />
+      </section>
+      
       {/* モンスターリストを表示 */}
-      <section className="py-8">
+      <section className="py-4">
         <MonsterList />
       </section>
     </div>
