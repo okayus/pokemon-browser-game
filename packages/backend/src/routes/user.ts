@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import { authMiddleware } from '../middleware/auth';
-import { AuthUser, UserProfileDB, UserProfileResponse } from '../types';
+import { AuthUser, UserProfileDB, UserProfileResponse, Bindings } from '../types';
 
 // ユーザーAPIルーターの作成
-const userRouter = new Hono();
+const userRouter = new Hono<{ Bindings: Bindings }>();
 
 // ユーザープロフィール取得API
 userRouter.get('/profile', authMiddleware(), async (c) => {
@@ -70,14 +70,13 @@ userRouter.get('/profile', authMiddleware(), async (c) => {
   }
 });
 
-// ユーザープロフィール更新API (今回は実装しないため、シンプルなレスポンスのみ)
+// ユーザープロフィール更新API
 userRouter.post('/profile', authMiddleware(), async (c) => {
   const user = c.get('user') as AuthUser;
   
   try {
-    // リクエストボディを取得（将来的な実装のために受け取るが、現時点では使用しない）
-    // 未使用変数エラーを回避するためにコメントアウト
-    // const body = await c.req.json();
+    // リクエストボディを取得
+    await c.req.json(); // 読み取りだけして利用しない（将来的な実装のため）
     
     // 実際のプロジェクトではバリデーションとDBへの保存が必要
     // 今回は成功レスポンスのみ返す
