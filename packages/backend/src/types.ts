@@ -13,16 +13,16 @@ export type Bindings = {
 
 // Honoコンテキストの型拡張
 declare module 'hono' {
-  // Bindingsを含むEnvironment型定義（Envという名前の衝突を避ける）
-  interface Env {
-    Bindings: Bindings;
-  }
-
   // 認証済みユーザー情報の型
   interface ContextVariableMap {
     user?: AuthUser;
   }
 }
+
+// アプリケーション全体で使用する環境型
+export type Env = {
+  Bindings: Bindings;
+};
 
 // 認証ユーザーの型定義
 export interface AuthUser {
