@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// 未使用のclientをインポートしないようにする
+import { api } from '../lib/api';
 import type { MonsterSummary } from 'shared';
 
 export default function MonsterList() {
@@ -13,14 +13,13 @@ export default function MonsterList() {
       try {
         setLoading(true);
         
-        // 型エラー回避のため、fetch APIを直接使用
-        const response = await fetch('http://127.0.0.1:8787/api/monsters');
-        const data = await response.json();
+        // 新しいAPIクライアントを使用
+        const result = await api.getMonsters();
         
-        if (response.ok && data.data) {
-          setMonsters(data.data.monsters);
+        if (result) {
+          setMonsters(result.monsters);
         } else {
-          setError(data.error?.message || 'モンスターの取得に失敗しました');
+          setError('モンスターの取得に失敗しました');
         }
       } catch (err) {
         console.error('Error fetching monsters:', err);
