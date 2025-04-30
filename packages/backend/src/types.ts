@@ -1,39 +1,52 @@
-// Cloudflare Workers環境変数の型定義
-export interface Env {
-  // 環境変数
-  NODE_ENV: string;
-  
-  // D1データベース（Cloudflare）
-  DB: D1Database;
-  
-  // KVストア（Cloudflare）
-  GAME_STORE: KVNamespace;
+import { UserProfile } from 'shared';
+
+// Hono環境変数の型拡張
+// Cloudflare Workersの環境変数
+declare module 'hono' {
+  interface Env {
+    DB?: D1Database;
+    GAME_STORE?: KVNamespace;
+    NODE_ENV?: string;
+    FIREBASE_PROJECT_ID?: string;
+    FIREBASE_CLIENT_EMAIL?: string;
+    FIREBASE_PRIVATE_KEY?: string;
+    ALLOWED_ORIGINS?: string;
+  }
+
+  // 認証済みユーザー情報の型
+  interface ContextVariableMap {
+    user?: AuthUser;
+  }
 }
 
-// ユーザー関連の型
-export interface User {
-  id: string;
-  username: string;
-  createdAt: string;
-  updatedAt: string;
+// 認証ユーザーの型定義
+export interface AuthUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
 }
 
-// ゲームキャラクター関連の型
-export interface Character {
-  id: number;
-  name: string;
-  type: string;
+// ユーザープロフィールのDBスキーマ
+export interface UserProfileDB {
+  uid: string; // Firebase Auth UID
+  nickname: string;
+  avatarId: string;
   level: number;
-  hp: number;
-  attack: number;
-  defense: number;
-  speed: number;
-  imageUrl?: string;
+  experience: number;
+  lastLogin: number; // Unix timestamp
+  createdAt: number; // Unix timestamp
+  updatedAt: number; // Unix timestamp
 }
 
-// API共通レスポンス型
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
+// 内部で使用するユーザープロフィール型（AuthUserとUserProfileDBを結合）
+export interface UserProfileFull extends AuthUser, UserProfileDB {}
+
+// APIレスポンスのユーザープロフィール
+export interface UserProfileResponse extends UserProfile {
+  gameProfile: {
+    nickname: string;
+    avatarId: string;
+    level: number;
+    experience: number;
+  };
 }
