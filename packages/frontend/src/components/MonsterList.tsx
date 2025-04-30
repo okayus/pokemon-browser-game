@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { client } from '../lib/api';
+// 未使用のclientをインポートしないようにする
 import type { MonsterSummary } from 'shared';
 
 export default function MonsterList() {
